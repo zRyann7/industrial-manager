@@ -78,7 +78,8 @@ class StockMovement(BaseModel):
     )
 
     def save(self, *args, **kwargs):
-        if self.pk:
+        # O pk (UUID) já existe antes do primeiro save; use _state.adding para detectar edição.
+        if not self._state.adding:
             raise ValidationError("Movimentações de estoque são imutáveis e não podem ser alteradas.")
         
         if self.quantity <= 0:

@@ -7,6 +7,8 @@ venv/
 
 # Variaveis de Ambiente
 .env
+.env.*
+!.env.example
 
 # Django
 *.log
@@ -18,3 +20,4 @@ media/
 .vscode/
 .DS_Store
 Thumbs.db
+staticfiles/

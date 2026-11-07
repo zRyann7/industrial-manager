@@ -1,20 +1,29 @@
+from datetime import timedelta
 from pathlib import Path
+
 import environ
-import os
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
-    DEBUG=(bool, False) 
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1']),
+    CORS_ALLOWED_ORIGINS=(list, ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:5173']),
+    DB_PORT=(str, '5432'),
 )
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# Lê o .env da raiz do repositório (e de backend/, se existir).
+# Variáveis já definidas no ambiente (ex.: Docker) têm prioridade.
+for _env_file in (BASE_DIR.parent / '.env', BASE_DIR / '.env'):
+    if _env_file.exists():
+        environ.Env.read_env(_env_file)
 
-SECRET_KEY = 'django-insecure-%5ul(ow2#-s^-p^0bc#l*0mlyti&c-6!#$1g@bgc%mf_77iws6'
+# Sem valor padrão: o Django se recusa a iniciar sem SECRET_KEY definida.
+SECRET_KEY = env('SECRET_KEY')
 
+DEBUG = env('DEBUG')
 
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -120,22 +129,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-CORS_ALLOW_ORIGINS = True
+CORS_ALLOWED_ORIGINS = env('CORS_ALLOWED_ORIGINS')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # Seguro por padrão: toda view exige login, a menos que declare o contrário.
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
-from datetime import timedelta
-
 SIMPLE_JWT = {
-    'ACESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8081",
-]
