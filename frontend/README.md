@@ -1,16 +1,57 @@
-# React + Vite
+# Greenish ERP Têxtil · controle de estoque
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Controle de estoque de **matéria-prima e aviamentos** para uma fábrica de roupas
+(tecidos, aviamentos, linhas e embalagens). Sem valores monetários.
 
-Currently, two official plugins are available:
+Frontend em TanStack Start, React, Tailwind v4, shadcn/ui, Recharts, TanStack Query e Axios.
+O backend é uma API **Django REST Framework** separada, com login por **JWT**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Rodando
 
-## React Compiler
+```sh
+bun install        # ou: npm i
+bun run dev        # ou: npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+O app espera a API em `http://localhost:8000/api/v1/`. Para outro endereço, copie
+`.env.example` para `.env.local` e ajuste `VITE_API_URL`.
 
-## Expanding the Oxlint configuration
+No Django, libere a origem do frontend no CORS (por exemplo com `django-cors-headers`:
+`CORS_ALLOWED_ORIGINS`), senão o navegador bloqueia as chamadas.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Autenticação
+
+Ao abrir o app sem sessão aparece a tela de login. Ela faz
+`POST /api/v1/auth/login/` com `{ "username": "...", "password": "..." }` e guarda o JWT
+recebido (`access`, ou `token`) no `localStorage`. Toda requisição seguinte leva
+`Authorization: Bearer <jwt>`. Um `401` da API encerra a sessão e volta ao login.
+
+## Contrato com a API
+
+Todas as rotas ficam em `src/lib/api.ts` (objeto `ROTAS`):
+
+| Tela          | Requisição                                                                              |
+| ------------- | --------------------------------------------------------------------------------------- |
+| Dashboard     | `GET dashboard/resumo/`, `dashboard/categorias/`, `dashboard/movimentacoes-mensais/`    |
+| Materiais     | `GET materiais/?status=&categoria=&search=&limit=`                                      |
+| Movimentações | `GET movimentacoes/?limit=`                                                             |
+| Fornecedores  | `GET fornecedores/`                                                                     |
+| Solicitações  | `GET solicitacoes-compra/` · `POST solicitacoes-compra/ { material }` (409 = já existe) |
+
+Listas podem vir puras ou paginadas (`{ count, results }`). Os formatos de resposta estão em
+`src/lib/types.ts`.
+
+### Saldo e status vêm do backend
+
+O frontend **não calcula** o status do estoque. Cada material chega com `estoque_atual`,
+`estoque_minimo` e `status` (`em_estoque`, `baixo` ou `ruptura`) já resolvidos pela API;
+as telas só exibem esses valores. Campos decimais que o DRF serializa como string
+(`"12.500"`) são apenas convertidos para número.
+
+## Estrutura
+
+- `src/routes/`: páginas (`/`, `/materiais`, `/movimentacoes`, `/fornecedores`, `/solicitacoes`)
+- `src/components/`: shell com menu, login, KPIs, gráfico, tabela de materiais, badges
+- `src/lib/http.ts`: instância do Axios (base URL, Bearer, tratamento de 401)
+- `src/lib/api.ts`: chamadas à API · `src/lib/estoque-api.ts`: hooks do TanStack Query
+- `src/lib/auth.ts`, `src/lib/auth-store.ts`: login e armazenamento do JWT

@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.db import models, transaction
 from django.core.exceptions import ValidationError
 from django.conf import settings
-from backend.apps.common.models import BaseModel
+from apps.common.models import BaseModel
 
 class UnitOfMeasure(BaseModel):
     name = models.CharField('nome', max_length=50)
