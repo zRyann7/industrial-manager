@@ -1,4 +1,4 @@
-import { isAxiosError } from "axios";
+﻿import { isAxiosError } from "axios";
 
 import { API_URL } from "./http";
 
@@ -26,7 +26,7 @@ export function explicarErro(erro: unknown): string {
     const { status, data } = erro.response;
     if (status === 401) return "Sessão expirada. Entre novamente.";
     if (status === 403) return "Seu usuário não tem permissão para acessar este recurso.";
-    if (status === 404) return "Endpoint não encontrado. Confira as rotas da API em /api/v1/.";
+    if (status === 404) return "Endpoint não encontrado. Confira as rotas da API em /api/.";
     if (status >= 500) return "A API retornou um erro interno. Veja o log do Django.";
     return detalheDrf(data) ?? `A API recusou a requisição (HTTP ${status}).`;
   }

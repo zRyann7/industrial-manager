@@ -1,4 +1,4 @@
-# Greenish ERP Têxtil · controle de estoque
+﻿# Greenish ERP Têxtil · controle de estoque
 
 Controle de estoque de **matéria-prima e aviamentos** para uma fábrica de roupas
 (tecidos, aviamentos, linhas e embalagens). Sem valores monetários.
@@ -13,7 +13,7 @@ bun install        # ou: npm i
 bun run dev        # ou: npm run dev
 ```
 
-O app espera a API em `http://localhost:8000/api/v1/`. Para outro endereço, copie
+O app espera a API em `http://localhost:8000/api/`. Para outro endereço, copie
 `.env.example` para `.env.local` e ajuste `VITE_API_URL`.
 
 No Django, libere a origem do frontend no CORS (por exemplo com `django-cors-headers`:
@@ -22,7 +22,7 @@ No Django, libere a origem do frontend no CORS (por exemplo com `django-cors-hea
 ## Autenticação
 
 Ao abrir o app sem sessão aparece a tela de login. Ela faz
-`POST /api/v1/auth/login/` com `{ "username": "...", "password": "..." }` e guarda o JWT
+`POST /api/auth/login/` com `{ "username": "...", "password": "..." }` e guarda o JWT
 recebido (`access`, ou `token`) no `localStorage`. Toda requisição seguinte leva
 `Authorization: Bearer <jwt>`. Um `401` da API encerra a sessão e volta ao login.
 

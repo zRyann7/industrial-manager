@@ -1,4 +1,4 @@
-from decimal import Decimal
+﻿from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -51,14 +51,14 @@ class ApiAccessSmokeTests(TestCase):
     def test_rotas_exigem_login(self):
         client = APIClient()
         for rota in ('units', 'categories', 'products', 'balances', 'movements'):
-            resp = client.get(f'/api/v1/inventory/{rota}/')
+            resp = client.get(f'/api/inventory/{rota}/')
             self.assertEqual(resp.status_code, 401, rota)
 
     def test_login_jwt_e_acesso_autenticado(self):
         CustomUser.objects.create_user(username='a', email='a@x.com', password='Senha-123-ok')
         client = APIClient()
-        resp = client.post('/api/v1/auth/login/', {'email': 'a@x.com', 'password': 'Senha-123-ok'}, format='json')
+        resp = client.post('/api/auth/login/', {'email': 'a@x.com', 'password': 'Senha-123-ok'}, format='json')
         self.assertEqual(resp.status_code, 200)
         client.credentials(HTTP_AUTHORIZATION='Bearer ' + resp.data['access'])
-        self.assertEqual(client.get('/api/v1/inventory/products/').status_code, 200)
-        self.assertEqual(client.get('/api/v1/auth/me/').status_code, 200)
+        self.assertEqual(client.get('/api/inventory/products/').status_code, 200)
+        self.assertEqual(client.get('/api/auth/me/').status_code, 200)

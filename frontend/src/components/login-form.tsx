@@ -23,7 +23,7 @@ export function LoginForm() {
     } catch (falha) {
       const recusado =
         isAxiosError(falha) && (falha.response?.status === 400 || falha.response?.status === 401);
-      setErro(recusado ? "Usuário ou senha inválidos." : explicarErro(falha));
+      setErro(recusado ? "Email ou senha inválidos." : explicarErro(falha));
     } finally {
       setEnviando(false);
     }
@@ -43,14 +43,14 @@ export function LoginForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="usuario" className="label-mono">
+          <label htmlFor="email" className="label-mono">
             Usuário
           </label>
           <input
-            id="usuario"
+            id="email"
             value={usuario}
             onChange={(e) => setUsuario(e.target.value)}
-            autoComplete="username"
+            autoComplete="email"
             required
             autoFocus
             className={campo}

@@ -1,8 +1,8 @@
-import axios from "axios";
+﻿import axios from "axios";
 
 import { getToken, setToken } from "./auth-store";
 
-export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1/";
+export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/";
 
 /** Cliente único da API Django. Todas as chamadas de dados e de login passam por aqui. */
 export const http = axios.create({

@@ -4,7 +4,7 @@ import { assinarToken, getToken, setToken } from "./auth-store";
 import { http } from "./http";
 
 /** Nome do campo de usuário esperado pelo seu serializer de login (SimpleJWT usa "username"). */
-const CAMPO_USUARIO = "username";
+const CAMPO_USUARIO = "email";
 
 interface RespostaLogin {
   access?: string;

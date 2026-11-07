@@ -1,4 +1,4 @@
-// Tipos do domínio de estoque. Espelham o JSON devolvido pela API Django (/api/v1/).
+﻿// Tipos do domínio de estoque. Espelham o JSON devolvido pela API Django (/api/).
 
 export type Status = "em_estoque" | "baixo" | "ruptura";
 export type Categoria = "tecido" | "aviamento" | "linha" | "embalagem";

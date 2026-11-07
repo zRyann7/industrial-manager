@@ -1,4 +1,4 @@
-import { isAxiosError } from "axios";
+﻿import { isAxiosError } from "axios";
 
 import { ordemCategorias } from "./format";
 import { http } from "./http";
@@ -14,7 +14,7 @@ import type {
   Solicitacao,
 } from "./types";
 
-// Endpoints esperados em http://localhost:8000/api/v1/ — ajuste só aqui se as rotas forem outras.
+// Endpoints esperados em http://localhost:8000/api/ — ajuste só aqui se as rotas forem outras.
 const ROTAS = {
   resumo: "dashboard/resumo/",
   categorias: "dashboard/categorias/",
